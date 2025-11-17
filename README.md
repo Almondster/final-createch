@@ -1,19 +1,20 @@
+````markdown
 # Installation Instructions
 
 ## 🔑 Debug Keystore
-```
+
+To list the debug keystore details, run:
 
 ```sh
 keytool -keystore ./android/app/debug.keystore -list -v
 # Password: android
-```
+````
 
-```md
+## 📦 Install Dependencies
 
-## 📦 Install Dependencies (No &&)
+Run the following commands separately to install all required dependencies.
 
 ### React Navigation, Expo Router, and Core Libraries
-```
 
 ```sh
 npx expo install \
@@ -32,10 +33,7 @@ npx expo install \
   @react-native-community/datetimepicker
 ```
 
-```md
-
 ### Expo Modules
-```
 
 ```sh
 npx expo install \
@@ -52,21 +50,17 @@ npx expo install \
   expo-system-ui
 ```
 
-```md
-
 ### React and React Native
-```
 
 ```sh
 npx expo install react react-dom react-native
 ```
 
-```md
-
 ### TypeScript Types
-```
 
 ```sh
 npm install -D @types/react @types/react-native
 ```
 
+```
+```
