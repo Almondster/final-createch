@@ -1,10 +1,11 @@
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
+import React from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { REMEMBER_KEY } from '@/constants/storage';
 
-export default function HomeScreen() {
+function HomeScreenContent() {
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -30,6 +31,8 @@ export default function HomeScreen() {
     </View>
   );
 }
+
+export default React.memo(HomeScreenContent);
 
 const styles = StyleSheet.create({
   container: {

@@ -1,21 +1,20 @@
-import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
 import * as Google from 'expo-auth-session/providers/google';
 import * as Crypto from 'expo-crypto';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import * as WebBrowser from 'expo-web-browser';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 
 import { REMEMBER_KEY } from '@/constants/storage';
@@ -35,6 +34,8 @@ export default function LoginScreen() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [request, , promptAsync] = Google.useAuthRequest({
     expoClientId: '130505613021-97rl6g2j8ldf6hrrc7ca8erdohn9brs8.apps.googleusercontent.com',
     iosClientId: '130505613021-jfukb8pt9f9o8615obuigcdj5luoivhn.apps.googleusercontent.com',
@@ -46,24 +47,6 @@ export default function LoginScreen() {
   useEffect(() => {
     void loadRememberedCredentials();
   }, []);
-
-  const emailError = useMemo(() => {
-    if (!email.trim()) {
-      return 'Email is required';
-    }
-    const regex = /\S+@\S+\.\S+/;
-    return regex.test(email.trim()) ? '' : 'Enter a valid email';
-  }, [email]);
-
-  const passwordError = useMemo(() => {
-    if (!password) {
-      return 'Password is required';
-    }
-    if (password.length < 6) {
-      return 'Password must be at least 6 characters';
-    }
-    return '';
-  }, [password]);
 
   const loadRememberedCredentials = async () => {
     try {
@@ -98,11 +81,37 @@ export default function LoginScreen() {
   };
 
   const handleLogin = async () => {
-    if (emailError || passwordError) {
-      const issues = [emailError, passwordError].filter(Boolean).join('\n');
-      Alert.alert('Incomplete form', issues);
+    // Validate and set errors
+    let hasError = false;
+    
+    if (!email.trim()) {
+      setEmailError('Email is required');
+      hasError = true;
+    } else {
+      const regex = /\S+@\S+\.\S+/;
+      if (!regex.test(email.trim())) {
+        setEmailError('Enter a valid email');
+        hasError = true;
+      } else {
+        setEmailError('');
+      }
+    }
+
+    if (!password) {
+      setPasswordError('Password is required');
+      hasError = true;
+    } else if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      hasError = true;
+    } else {
+      setPasswordError('');
+    }
+
+    if (hasError) {
+      Alert.alert('Incomplete form', 'Please check the form for errors.');
       return;
     }
+
     try {
       setLoading(true);
       await persistCredentials(rememberMe);
@@ -169,7 +178,7 @@ export default function LoginScreen() {
               CREA<Text style={styles.logoAccent}>TECH</Text>
             </Text>
             <Text style={styles.heroTitle}>Sign in to your Account</Text>
-            <Text style={styles.heroSubtitle}>Don’t have an account?{' '}
+            <Text style={styles.heroSubtitle}>Don't have an account?{' '}
               <Link href="/register" style={styles.inlineLink}>
                 Sign Up
               </Link>
@@ -210,15 +219,15 @@ export default function LoginScreen() {
                   returnKeyType="done"
                 />
                 <Pressable
-                  onPress={() => setPasswordVisible((prev) => !prev)}
-                  style={styles.passwordToggle}>
-                  <FontAwesome5
-                    name={passwordVisible ? 'eye-slash' : 'eye'}
-                    size={16}
-                    color="#637381"
-                  />
+                onPress={() => setPasswordVisible((prev) => !prev)}
+                style={styles.passwordToggle}>
+                <Ionicons
+                    name={passwordVisible ? 'eye-off' : 'eye'}
+                    size={20}
+                    color="#6B7280"
+                />
                 </Pressable>
-              </View>
+                            </View>
               {!!passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
             </View>
 
@@ -237,13 +246,14 @@ export default function LoginScreen() {
             </View>
 
             <Pressable
-              onPress={handleLogin}
-              disabled={loading}
-              style={({ pressed }) => [{ opacity: pressed || loading ? 0.8 : 1 }]}>
-              <LinearGradient colors={['#387BFF', '#1155FF']} style={styles.primaryButton}>
+                onPress={handleLogin}
+                disabled={loading}
+                style={({ pressed }) => [
+                    styles.primaryButton,
+                    { opacity: pressed || loading ? 0.8 : 1 }
+                ]}>
                 <Text style={styles.primaryButtonText}>{loading ? 'Signing In...' : 'Log In'}</Text>
-              </LinearGradient>
-            </Pressable>
+                </Pressable>
 
             <View style={styles.dividerRow}>
               <View style={styles.divider} />
@@ -260,7 +270,7 @@ export default function LoginScreen() {
                 <Text style={styles.socialLabel}>Google</Text>
               </Pressable>
               <Pressable style={styles.socialButton} onPress={handleFacebookLogin}>
-                <AntDesign name="facebook-square" size={18} color="#1877F2" />
+                <FontAwesome name="facebook" size={18} color="#1877F2" />
                 <Text style={styles.socialLabel}>Facebook</Text>
               </Pressable>
             </View>
@@ -277,182 +287,187 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#0D0D0D',
-  },
-  scrollContent: {
-    paddingBottom: 40,
-  },
-  hero: {
-    backgroundColor: '#0D0D0D',
-    paddingHorizontal: 24,
-    paddingBottom: 36,
-    paddingTop: 24,
-  },
-  logo: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: '600',
-    letterSpacing: 2,
-  },
-  logoAccent: {
-    color: '#2D7BFF',
-  },
-  heroTitle: {
-    color: '#FFFFFF',
-    fontSize: 32,
-    fontWeight: '600',
-    marginTop: 24,
-  },
-  heroSubtitle: {
-    color: '#D1D5DB',
-    fontSize: 15,
-    marginTop: 8,
-  },
-  inlineLink: {
-    color: '#3B82F6',
-    fontWeight: '500',
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    padding: 24,
-    minHeight: 560,
-  },
-  fieldGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    color: '#1F2933',
-    marginBottom: 8,
-    fontWeight: '500',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
-    color: '#111827',
-    backgroundColor: '#F9FAFB',
-  },
-  errorText: {
-    color: '#DC2626',
-    marginTop: 6,
-    fontSize: 12,
-  },
-  passwordWrapper: {
-    position: 'relative',
-  },
-  passwordInput: {
-    paddingRight: 44,
-  },
-  passwordToggle: {
-    position: 'absolute',
-    right: 12,
-    top: 0,
-    bottom: 0,
-    justifyContent: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  rememberWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 6,
-    borderWidth: 1.5,
-    borderColor: '#CBD5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkboxChecked: {
-    borderColor: '#2563EB',
-    backgroundColor: '#2563EB',
-  },
-  checkboxInner: {
-    width: 8,
-    height: 8,
-    borderRadius: 2,
-    backgroundColor: '#FFFFFF',
-  },
-  checkboxLabel: {
-    color: '#1F2933',
-    fontSize: 14,
-    marginLeft: 10,
-  },
-  linkText: {
-    color: '#2563EB',
-    fontWeight: '500',
-  },
-  primaryButton: {
-    borderRadius: 16,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginBottom: 18,
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  dividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 18,
-  },
-  divider: {
-    height: 1,
-    flex: 1,
-    backgroundColor: '#E5E7EB',
-  },
-  dividerText: {
-    color: '#6B7280',
-    fontSize: 13,
-    marginHorizontal: 12,
-  },
-  socialRow: {
-    flexDirection: 'row',
-  },
-  socialButton: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    marginHorizontal: 4,
-  },
-  socialLabel: {
-    fontSize: 15,
-    color: '#111827',
-    marginLeft: 6,
-  },
-  termsText: {
-    textAlign: 'center',
-    color: '#6B7280',
-    marginTop: 24,
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  googleNativeButton: {
-    width: '100%',
-    height: 48,
-    marginTop: 12,
-  },
-});
-
-
+    safe: {
+      flex: 1,
+      backgroundColor: '#000000',
+    },
+    scrollContent: {
+      flexGrow: 1,
+      paddingBottom: 0,
+    },
+    hero: {
+      backgroundColor: '#000000',
+      paddingHorizontal: 24,
+      paddingTop: 60,
+      paddingBottom: 60,
+      alignItems: 'center',
+    },
+    logo: {
+      color: '#FFFFFF',
+      fontSize: 32,
+      fontWeight: '700',
+      letterSpacing: 1,
+      marginBottom: 40,
+    },
+    logoAccent: {
+      color: '#2563EB',
+    },
+    heroTitle: {
+      color: '#FFFFFF',
+      fontSize: 24,
+      fontWeight: '600',
+      textAlign: 'center',
+      marginBottom: 8,
+    },
+    heroSubtitle: {
+      color: '#D1D5DB',
+      fontSize: 16,
+      textAlign: 'center',
+    },
+    inlineLink: {
+      color: '#387BFF',
+      fontWeight: '500',
+    },
+    card: {
+      backgroundColor: '#FFFFFF',
+      paddingHorizontal: 24,
+      paddingTop: 24,
+      paddingBottom: 24,
+      flex: 1,
+      borderTopLeftRadius: 24,
+      borderTopRightRadius: 24,
+      marginTop: -20, // This creates the overlap
+    },
+    fieldGroup: {
+      marginBottom: 20,
+    },
+    label: {
+      fontSize: 16,
+      color: '#000000', // Changed (from App.js TEXT_COLOR)
+      marginBottom: 8,
+      fontWeight: '600', // Changed (from App.js)
+    },
+    input: {
+      borderWidth: 1.5, // Changed (from App.js)
+      borderColor: '#D1D5DB',
+      borderRadius: 12,
+      paddingHorizontal: 16,
+      height: 56, // Changed (from App.js)
+      fontSize: 16,
+      color: '#111827',
+      backgroundColor: '#FFFFFF',
+    },
+    errorText: {
+      color: '#DC2626',
+      marginTop: 6,
+      fontSize: 12,
+    },
+    passwordWrapper: {
+      position: 'relative',
+    },
+    passwordInput: {
+      paddingRight: 44,
+    },
+    passwordToggle: {
+      position: 'absolute',
+      right: 12,
+      top: 0,
+      bottom: 0,
+      justifyContent: 'center',
+    },
+    rowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 24,
+    },
+    rememberWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    checkbox: {
+      width: 20, // Changed (closer to image)
+      height: 20, // Changed (closer to image)
+      borderRadius: 4, // Changed (from index.tsx, more square)
+      borderWidth: 1.5,
+      borderColor: '#D1D5DB',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 8,
+    },
+    checkboxChecked: {
+      borderColor: '#2563EB',
+      backgroundColor: '#2563EB',
+    },
+    checkboxInner: {
+      width: 10,
+      height: 10,
+      borderRadius: 2,
+      backgroundColor: '#FFFFFF',
+    },
+    checkboxLabel: {
+      color: '#374151',
+      fontSize: 14,
+      fontWeight: '500', // Changed (from App.js)
+    },
+    linkText: {
+      color: '#2563EB',
+      fontWeight: '600', // Changed (from App.js)
+      fontSize: 14,
+    },
+    primaryButton: {
+      backgroundColor: '#387BFF',
+      borderRadius: 12,
+      height: 56, // Changed (from App.js)
+      justifyContent: 'center', // Added
+      alignItems: 'center',
+      marginBottom: 24,
+    },
+    primaryButtonText: {
+      color: '#FFFFFF',
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    dividerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 24,
+    },
+    divider: {
+      height: 1,
+      flex: 1,
+      backgroundColor: '#E5E7EB',
+    },
+    dividerText: {
+      color: '#6B7280',
+      fontSize: 14,
+      marginHorizontal: 12,
+    },
+    socialRow: {
+      flexDirection: 'row',
+      marginBottom: 24,
+    },
+    socialButton: {
+      flex: 1,
+      borderWidth: 1.5, // Changed (from App.js)
+      borderColor: '#E5E7EB',
+      borderRadius: 12,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: 56, // Changed (from App.js)
+      marginHorizontal: 4,
+    },
+    socialLabel: {
+      fontSize: 14,
+      color: '#374151',
+      marginLeft: 8,
+      fontWeight: '500', // Changed (from App.js)
+    },
+    termsText: {
+      textAlign: 'center',
+      color: '#6B7280',
+      fontSize: 12,
+      lineHeight: 16,
+    },
+  });
