@@ -7,7 +7,7 @@ To list the debug keystore details, run:
 ```sh
 keytool -keystore ./android/app/debug.keystore -list -v
 # Password: android
-````
+```
 
 ## 📦 Install Dependencies
 
