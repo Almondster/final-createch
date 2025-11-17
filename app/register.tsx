@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
       flexGrow: 1,
-      paddingBottom: 0, // Added some padding at bottom for better scrolling
+      paddingBottom: 0,
     },
     hero: {
       backgroundColor: '#000000',
@@ -421,11 +421,11 @@ const styles = StyleSheet.create({
       backgroundColor: '#FFFFFF',
       paddingHorizontal: 24,
       paddingTop: 24,
-      paddingBottom: 40, // Increased bottom padding
+      paddingBottom: 40, 
       flex: 1,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
-      marginTop: -20, // This creates the overlap
+      marginTop: -20, 
     },
     nameRow: {
       flexDirection: 'row',

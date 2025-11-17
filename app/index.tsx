@@ -336,23 +336,23 @@ const styles = StyleSheet.create({
       flex: 1,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
-      marginTop: -20, // This creates the overlap
+      marginTop: -20, 
     },
     fieldGroup: {
       marginBottom: 20,
     },
     label: {
       fontSize: 16,
-      color: '#000000', // Changed (from App.js TEXT_COLOR)
+      color: '#000000', 
       marginBottom: 8,
-      fontWeight: '600', // Changed (from App.js)
+      fontWeight: '600', 
     },
     input: {
-      borderWidth: 1.5, // Changed (from App.js)
+      borderWidth: 1.5, 
       borderColor: '#D1D5DB',
       borderRadius: 12,
       paddingHorizontal: 16,
-      height: 56, // Changed (from App.js)
+      height: 56, 
       fontSize: 16,
       color: '#111827',
       backgroundColor: '#FFFFFF',
@@ -386,9 +386,9 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     checkbox: {
-      width: 20, // Changed (closer to image)
-      height: 20, // Changed (closer to image)
-      borderRadius: 4, // Changed (from index.tsx, more square)
+      width: 20,
+      height: 20,
+      borderRadius: 4, 
       borderWidth: 1.5,
       borderColor: '#D1D5DB',
       justifyContent: 'center',
@@ -408,18 +408,18 @@ const styles = StyleSheet.create({
     checkboxLabel: {
       color: '#374151',
       fontSize: 14,
-      fontWeight: '500', // Changed (from App.js)
+      fontWeight: '500', 
     },
     linkText: {
       color: '#2563EB',
-      fontWeight: '600', // Changed (from App.js)
+      fontWeight: '600', 
       fontSize: 14,
     },
     primaryButton: {
       backgroundColor: '#387BFF',
       borderRadius: 12,
-      height: 56, // Changed (from App.js)
-      justifyContent: 'center', // Added
+      height: 56, 
+      justifyContent: 'center', 
       alignItems: 'center',
       marginBottom: 24,
     },
@@ -449,20 +449,20 @@ const styles = StyleSheet.create({
     },
     socialButton: {
       flex: 1,
-      borderWidth: 1.5, // Changed (from App.js)
+      borderWidth: 1.5, 
       borderColor: '#E5E7EB',
       borderRadius: 12,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      height: 56, // Changed (from App.js)
+      height: 56,
       marginHorizontal: 4,
     },
     socialLabel: {
       fontSize: 14,
       color: '#374151',
       marginLeft: 8,
-      fontWeight: '500', // Changed (from App.js)
+      fontWeight: '500', 
     },
     termsText: {
       textAlign: 'center',
