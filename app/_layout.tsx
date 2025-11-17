@@ -21,7 +21,9 @@ export default function RootLayout() {
           animation: 'fade',
           gestureEnabled: true,
           animationDuration: 250,
-          cardStyle: { backgroundColor: 'transparent' },
+          headerStyle: {
+            backgroundColor: colorScheme === 'dark' ? '#000000' : '#FFFFFF',
+          },
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />

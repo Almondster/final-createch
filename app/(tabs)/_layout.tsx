@@ -17,7 +17,6 @@ export default function TabLayout() {
         tabBarButton: HapticTab,
         lazy: true,
         animation: 'shift',
-        detachInactiveScreens: true,
         tabBarStyle: {
           backgroundColor: colorScheme === 'dark' ? '#000000' : '#FFFFFF',
           borderTopColor: colorScheme === 'dark' ? '#333333' : '#E5E7EB',
@@ -26,22 +25,16 @@ export default function TabLayout() {
           fontSize: 12,
           fontWeight: '500',
         },
-        tabBarIconStyle: {
-          transition: 'transform 0.2s',
-        },
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ color }) => (
             <IconSymbol 
               size={28} 
               name="house.fill" 
               color={color} 
-              style={{ 
-                transform: [{ scale: focused ? 1.1 : 1 }] 
-              }} 
             />
           ),
         }}
@@ -50,14 +43,11 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ color }) => (
             <IconSymbol 
               size={28} 
               name="paperplane.fill" 
               color={color} 
-              style={{ 
-                transform: [{ scale: focused ? 1.1 : 1 }] 
-              }} 
             />
           ),
         }}

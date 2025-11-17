@@ -37,7 +37,7 @@ export default function LoginScreen() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [request, , promptAsync] = Google.useAuthRequest({
-    expoClientId: '130505613021-97rl6g2j8ldf6hrrc7ca8erdohn9brs8.apps.googleusercontent.com',
+    clientId: '130505613021-97rl6g2j8ldf6hrrc7ca8erdohn9brs8.apps.googleusercontent.com',
     iosClientId: '130505613021-jfukb8pt9f9o8615obuigcdj5luoivhn.apps.googleusercontent.com',
     androidClientId: '130505613021-97rl6g2j8ldf6hrrc7ca8erdohn9brs8.apps.googleusercontent.com',
     webClientId: '130505613021-97rl6g2j8ldf6hrrc7ca8erdohn9brs8.apps.googleusercontent.com',
