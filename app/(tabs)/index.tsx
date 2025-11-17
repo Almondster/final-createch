@@ -1,68 +1,67 @@
-import { useState } from 'react';
-import { Alert, Button, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  isErrorWithCode,
-  isSuccessResponse,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import { REMEMBER_KEY } from '@/constants/storage';
 
-GoogleSignin.configure({
-  webClientId: '130505613021-97rl6g2j8ldf6hrrc7ca8erdohn9brs8.apps.googleusercontent.com1', 
-});
+export default function HomeScreen() {
+  const router = useRouter();
 
-const Index = () => {
-  const [userInfo, setUserInfo] = useState<any>(null);
-
-  const handleGoogleSignIn = async () => {
+  const handleSignOut = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      const response = await GoogleSignin.signIn();
-      if (isSuccessResponse(response)) {
-        setUserInfo(response.data)
-      } else {
-        console.log('Sign-in was cancelled by user.');
-      }
+      await SecureStore.deleteItemAsync(REMEMBER_KEY);
+      router.replace('/');
     } catch (error) {
-      if (isErrorWithCode(error)) {
-        switch (error.code) {
-          case statusCodes.IN_PROGRESS:
-            Alert.alert('Sign-in is in progress.');
-            break;
-          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            Alert.alert('Play services not available or outdated,');
-            break;
-          default:
-        }
-      } else {
-        Alert.alert('An error that is unrelated to Google Sign-in has occurred.');
-      }
+      Alert.alert('Sign out failed', 'Please try again.');
+      console.error(error);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text>Index</Text>
-      <Button title='Sign in with Google' onPress={handleGoogleSignIn} />
-      <GoogleSigninButton
-      style={{ width: 212, height: 48 }}
-      size={GoogleSigninButton.Size.Wide}
-      color={GoogleSigninButton.Color.Dark}
-      onPress={handleGoogleSignIn}
-      />
+      <Text style={styles.heading}>Welcome to CREATECH</Text>
+      <Text style={styles.subtitle}>
+        You are now signed in. This is your placeholder home screen – replace it with dashboard
+        widgets, quick actions, or product content when you connect to your backend.
+      </Text>
+      <Pressable style={styles.signOutButton} onPress={handleSignOut}>
+        <Text style={styles.signOutText}>Sign out</Text>
+      </Pressable>
     </View>
   );
 }
 
-export default Index 
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // This makes the container take up the whole screen
+    flex: 1,
+    padding: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff', // Example background color
-  }
+    backgroundColor: '#F4F6FB',
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#0F172A',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 15,
+    color: '#475569',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  signOutButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: '#2563EB',
+  },
+  signOutText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+    fontSize: 16,
+  },
 });
