@@ -60,6 +60,3 @@ npx expo install react react-dom react-native
 ```sh
 npm install -D @types/react @types/react-native
 ```
-
-```
-```
