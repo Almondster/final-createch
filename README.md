@@ -1,4 +1,3 @@
-````markdown
 # Installation Instructions
 
 ## 🔑 Debug Keystore
