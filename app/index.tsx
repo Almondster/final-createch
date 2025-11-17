@@ -1,4 +1,5 @@
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import * as Google from 'expo-auth-session/providers/google';
 import * as Crypto from 'expo-crypto';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
