@@ -1,4 +1,3 @@
-```md
 # Installation Instructions
 
 ## 🔑 Debug Keystore
@@ -71,5 +70,3 @@ npx expo install react react-dom react-native
 npm install -D @types/react @types/react-native
 ```
 
-```
-```
